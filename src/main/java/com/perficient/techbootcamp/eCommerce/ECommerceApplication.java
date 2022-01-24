@@ -1,13 +1,13 @@
-package com.perficient.techbootcampeCommerce;
+package com.perficient.techbootcamp.eCommerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TechbootcampECommerceApplication {
+public class ECommerceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TechbootcampECommerceApplication.class, args);
+		SpringApplication.run(ECommerceApplication.class, args);
 	}
 
 }

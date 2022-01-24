@@ -1,10 +1,10 @@
-package com.perficient.techbootcampeCommerce;
+package com.perficient.techbootcamp.eCommerce;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TechbootcampECommerceApplicationTests {
+class ECommerceApplicationTests {
 
 	@Test
 	void contextLoads() {
