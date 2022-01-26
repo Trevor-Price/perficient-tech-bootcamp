@@ -13,6 +13,7 @@ import com.perficient.techbootcamp.eCommerce.repository.ProductRepository;
 public class PopulateDatabase {
 	
 	@Bean
+	@SuppressWarnings("unused")
 	CommandLineRunner initDatabase(ProductRepository productRepo, BrandRepository brandRepo) {
 		return args -> {
 			Brand tools = brandRepo.save(new Brand("Top Tools"));

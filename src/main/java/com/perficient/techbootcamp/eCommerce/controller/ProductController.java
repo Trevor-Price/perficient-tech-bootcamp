@@ -20,13 +20,13 @@ public class ProductController {
 	private ProductService service;
 	
 	@GetMapping
-	List<Product> all(){
+	public List<Product> getAllProducts(){
 		return service.getAllProducts();
 	}
 	
 	@GetMapping("/{id}")
-	Optional<Product> one(@PathVariable Long id) {
-		return service.getProductById(id);
+	public Optional<Product> getProduct(@PathVariable Long productId) {
+		return service.getProductById(productId);
 	}
 	
 }
