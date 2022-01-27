@@ -1,7 +1,6 @@
 package com.perficient.techbootcamp.eCommerce.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ public class ProductService{
 		return products; 
 	}
 	
-	public Optional<Product> getProductById(long id) {
-		return repository.findById(id);
+	public Product getProductById(long id) {
+		return repository.findById(id).orElseThrow();
 	}
 	
 }

@@ -1,15 +1,22 @@
 package com.perficient.techbootcamp.eCommerce.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Product {
+public class Product implements Serializable{
 	
-	private @Id @GeneratedValue long productId;
+	private static final long serialVersionUID = 2240373165407600405L;
+	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long productId;
+	
 	private String description;
 	private double price;
 	private int quantityAvailable;
