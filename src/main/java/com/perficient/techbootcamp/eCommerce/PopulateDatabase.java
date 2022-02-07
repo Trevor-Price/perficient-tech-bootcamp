@@ -1,13 +1,13 @@
-package com.perficient.techbootcamp.eCommerce.config;
+package com.perficient.techbootcamp.eCommerce;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.perficient.techbootcamp.eCommerce.entity.Brand;
-import com.perficient.techbootcamp.eCommerce.entity.Product;
-import com.perficient.techbootcamp.eCommerce.repository.BrandRepository;
-import com.perficient.techbootcamp.eCommerce.repository.ProductRepository;
+import com.perficient.techbootcamp.eCommerce.product.Brand;
+import com.perficient.techbootcamp.eCommerce.product.BrandRepository;
+import com.perficient.techbootcamp.eCommerce.product.Product;
+import com.perficient.techbootcamp.eCommerce.product.ProductRepository;
 
 @Configuration
 public class PopulateDatabase {

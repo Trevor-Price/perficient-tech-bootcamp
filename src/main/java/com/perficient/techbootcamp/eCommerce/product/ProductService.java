@@ -1,12 +1,9 @@
-package com.perficient.techbootcamp.eCommerce.service;
+package com.perficient.techbootcamp.eCommerce.product;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.perficient.techbootcamp.eCommerce.entity.Product;
-import com.perficient.techbootcamp.eCommerce.repository.ProductRepository;
 
 @Service
 public class ProductService{

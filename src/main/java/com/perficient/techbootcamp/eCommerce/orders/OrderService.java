@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.service;
+package com.perficient.techbootcamp.eCommerce.orders;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -9,15 +9,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.perficient.techbootcamp.eCommerce.controller.requestbody.PostOrderItem;
-import com.perficient.techbootcamp.eCommerce.controller.responsebody.OrderItems;
-import com.perficient.techbootcamp.eCommerce.controller.responsebody.ProductQuantity;
-import com.perficient.techbootcamp.eCommerce.entity.OrderItem;
-import com.perficient.techbootcamp.eCommerce.entity.Orders;
-import com.perficient.techbootcamp.eCommerce.entity.Product;
-import com.perficient.techbootcamp.eCommerce.repository.OrderItemRepository;
-import com.perficient.techbootcamp.eCommerce.repository.OrdersRepository;
-import com.perficient.techbootcamp.eCommerce.repository.ProductRepository;
+import com.perficient.techbootcamp.eCommerce.product.Product;
+import com.perficient.techbootcamp.eCommerce.product.ProductRepository;
 
 @Service
 public class OrderService {

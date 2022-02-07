@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.entity;
+package com.perficient.techbootcamp.eCommerce.orders;
 
 import java.io.Serializable;
 import java.time.LocalDate;

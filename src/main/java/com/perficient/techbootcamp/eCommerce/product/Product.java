@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.entity;
+package com.perficient.techbootcamp.eCommerce.product;
 
 import java.io.Serializable;
 

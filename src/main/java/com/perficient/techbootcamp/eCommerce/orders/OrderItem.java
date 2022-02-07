@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.entity;
+package com.perficient.techbootcamp.eCommerce.orders;
 
 import java.io.Serializable;
 
@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.perficient.techbootcamp.eCommerce.product.Product;
 
 @Entity
 @Table(uniqueConstraints= {

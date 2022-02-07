@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.controller.requestbody;
+package com.perficient.techbootcamp.eCommerce.orders;
 
 public class PostOrderItem {
 	private Long productId;

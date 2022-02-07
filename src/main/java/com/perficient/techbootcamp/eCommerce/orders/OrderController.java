@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.controller;
+package com.perficient.techbootcamp.eCommerce.orders;
 
 import java.net.URI;
 import java.util.List;
@@ -16,11 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.perficient.techbootcamp.eCommerce.controller.requestbody.PostOrderItem;
-import com.perficient.techbootcamp.eCommerce.controller.responsebody.OrderItems;
-import com.perficient.techbootcamp.eCommerce.entity.Orders;
-import com.perficient.techbootcamp.eCommerce.service.OrderService;
 
 @RestController
 @RequestMapping("/api/orders")

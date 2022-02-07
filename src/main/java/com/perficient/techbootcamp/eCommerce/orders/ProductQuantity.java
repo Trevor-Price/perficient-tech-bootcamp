@@ -1,6 +1,6 @@
-package com.perficient.techbootcamp.eCommerce.controller.responsebody;
+package com.perficient.techbootcamp.eCommerce.orders;
 
-import com.perficient.techbootcamp.eCommerce.entity.Product;
+import com.perficient.techbootcamp.eCommerce.product.Product;
 
 public class ProductQuantity {
 
