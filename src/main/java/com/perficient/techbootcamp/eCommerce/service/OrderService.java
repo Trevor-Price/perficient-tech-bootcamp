@@ -2,11 +2,16 @@ package com.perficient.techbootcamp.eCommerce.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.perficient.techbootcamp.eCommerce.controller.requestbody.PostOrderItem;
+import com.perficient.techbootcamp.eCommerce.controller.responsebody.OrderItems;
+import com.perficient.techbootcamp.eCommerce.controller.responsebody.ProductQuantity;
 import com.perficient.techbootcamp.eCommerce.entity.OrderItem;
 import com.perficient.techbootcamp.eCommerce.entity.Orders;
 import com.perficient.techbootcamp.eCommerce.entity.Product;
@@ -30,10 +35,16 @@ public class OrderService {
 		return (List<Orders>) orderRepository.findAll();
 	}
 	
-	public List<OrderItem> getAllOrderItems(Long orderId){
+	public OrderItems getAllOrderItems(Long orderId){
 		Orders order = orderRepository.findById(orderId).orElseThrow();
 		List<OrderItem> orderItems = orderItemRepository.findAllItemsByOrder(order);
-		return orderItems;
+		List<ProductQuantity> productQuantities = new ArrayList<ProductQuantity>();
+		for(OrderItem item : orderItems) {
+			productQuantities.add(
+				new ProductQuantity(item.getProduct(), item.getQuantity())
+			);
+		}
+		return new OrderItems(order, productQuantities);
 	}
 	
 	public Orders placeOrder(List<PostOrderItem> items) {
@@ -44,17 +55,17 @@ public class OrderService {
 		return placedOrder;
 	}
 	
-		private void addOrderItem(Orders order, Long productId, int quantityOrdered) {
-			Product item = productRepository.findById(productId).orElseThrow();
-			orderItemRepository.save(new OrderItem(order, item, quantityOrdered));
-		}
+	private void addOrderItem(Orders order, Long productId, int quantityOrdered) {
+		Product item = productRepository.findById(productId).orElseThrow();
+		orderItemRepository.save(new OrderItem(order, item, quantityOrdered));
+	}
 		
-		private void addOrderItems(Orders order, List<PostOrderItem> items) {
-			for(PostOrderItem item : items) {
-				addOrderItem(order, item.getProductId(), item.getQuantity());
-			}
-			//Return accepted status
+	private void addOrderItems(Orders order, List<PostOrderItem> items) {
+		for(PostOrderItem item : items) {
+			addOrderItem(order, item.getProductId(), item.getQuantity());
 		}
+		//Return accepted status
+	}
 	
 	public void cancelOrder(Long orderId) throws IllegalArgumentException{
 		orderRepository.deleteById(orderId);

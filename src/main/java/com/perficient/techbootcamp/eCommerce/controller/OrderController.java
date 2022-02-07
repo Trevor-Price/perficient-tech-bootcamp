@@ -1,5 +1,6 @@
 package com.perficient.techbootcamp.eCommerce.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.perficient.techbootcamp.eCommerce.controller.requestbody.PostOrderItem;
-import com.perficient.techbootcamp.eCommerce.entity.OrderItem;
+import com.perficient.techbootcamp.eCommerce.controller.responsebody.OrderItems;
 import com.perficient.techbootcamp.eCommerce.entity.Orders;
 import com.perficient.techbootcamp.eCommerce.service.OrderService;
 
@@ -36,13 +37,15 @@ public class OrderController {
 	@PostMapping
 	public ResponseEntity<Orders> postOrder(@RequestBody List<PostOrderItem> orderItems) {
 		Orders order = service.placeOrder(orderItems);
-		return new ResponseEntity<Orders>(order, HttpStatus.CREATED);
+		URI uri = URI.create("/api/orders"+order.getOrderId());
+		return ResponseEntity.created(uri).body(order);
 	}
 	
 	@GetMapping("/{orderId}")
-	public List<OrderItem> getAllOrderItems(@PathVariable Long orderId){
+	public ResponseEntity<OrderItems> getAllOrderItems(@PathVariable Long orderId){
 		try {
-			return service.getAllOrderItems(orderId);
+			OrderItems orderItems = service.getAllOrderItems(orderId);
+			return new ResponseEntity<OrderItems>(orderItems, HttpStatus.OK);
 		} catch(NoSuchElementException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to get order items. Order not found for id: %d.", orderId));
 		}
