@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+	xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:flowable="http://flowable.org/bpmn"
+	typeLanguage="http://www.w3.org/2001/XMLSchema"
+	expressionLanguage="http://www.w3.org/1999/XPath"
+	targetNamespace="http://www.flowable.org/processdef">
+	
+	<process id="placeOrder" name="Customer Order Purchase Process">
+		<startEvent id="orderSubmitted"/>
+		<sequenceFlow sourceRef="orderSubmitted" targetRef="orderArrivalTimer"/>
+		
+		<!-- Wait for order cancellation or wait for arrival -->
+			<userTask id="cancelOrder" name="Cancel Order"/>
+			<boundaryEvent id="orderArrivalTimer" attachedToRef="cancelOrder">
+				<timerEventDefinition>
+					<timeDate>${arrivalDate}</timeDate>
+				</timerEventDefinition>
+			</boundaryEvent>
+				
+		<!-- Order Arrived -->
+			<serviceTask id="orderArrival" name="Order Arrived"
+				flowable:class="com.perficient.techbootcamp.eCommerce.process.order.Arrival"/>
+			<sequenceFlow sourceRef="orderArrival" targetRef="orderArrived"/>
+			
+			<endEvent id="orderArrived">
+				<terminateEventDefinition></terminateEventDefinition>
+			</endEvent>
+			
+		<!-- Order Canceled -->		
+			<serviceTask id="orderCancellation" name="Order Cancelled"
+				flowable:class="com.perficient.techbootcamp.eCommerce.process.order.Cancellation"/>
+			<sequenceFlow sourceRef="cancelOrder" targetRef="orderCancelled"/>
+			
+			<endEvent id="orderCancelled">
+				<terminateEventDefinition></terminateEventDefinition>
+			</endEvent>
+			
+	</process>
+
+</definitions>
+	

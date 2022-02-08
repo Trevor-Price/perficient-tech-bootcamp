@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.product;
+package com.perficient.techbootcamp.eCommerce.entity;
 
 import java.io.Serializable;
 
@@ -8,8 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(schema = "ecommerce")
 public class Product implements Serializable{
 	
 	private static final long serialVersionUID = 2240373165407600405L;

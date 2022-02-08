@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.product;
+package com.perficient.techbootcamp.eCommerce.entity;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -8,8 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(schema = "ecommerce")
 public class Brand implements Serializable{
 	
 	private static final long serialVersionUID = 5447891919722293324L;

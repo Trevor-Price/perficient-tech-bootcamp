@@ -1,16 +1,25 @@
-package com.perficient.techbootcamp.eCommerce.orders;
+package com.perficient.techbootcamp.eCommerce.service;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.flowable.engine.RuntimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.perficient.techbootcamp.eCommerce.product.Product;
-import com.perficient.techbootcamp.eCommerce.product.ProductRepository;
+import com.perficient.techbootcamp.eCommerce.entity.OrderItem;
+import com.perficient.techbootcamp.eCommerce.entity.Orders;
+import com.perficient.techbootcamp.eCommerce.entity.Product;
+import com.perficient.techbootcamp.eCommerce.orders.OrderItems;
+import com.perficient.techbootcamp.eCommerce.orders.PostOrderItem;
+import com.perficient.techbootcamp.eCommerce.orders.ProductQuantity;
+import com.perficient.techbootcamp.eCommerce.repository.OrderItemRepository;
+import com.perficient.techbootcamp.eCommerce.repository.OrdersRepository;
+import com.perficient.techbootcamp.eCommerce.repository.ProductRepository;
 
 @Service
 public class OrderService {
@@ -23,6 +32,9 @@ public class OrderService {
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private RuntimeService runtimeService;
 	
 	public List<Orders> getAllOrders() {
 		return (List<Orders>) orderRepository.findAll();
@@ -41,9 +53,13 @@ public class OrderService {
 	}
 	
 	public Orders placeOrder(List<PostOrderItem> items) {
+		//Update Inventory
 		LocalDate orderDate = LocalDate.now();
 		LocalDate arrivalDate = orderDate.plus(Period.ofDays(5));
 		Orders placedOrder = orderRepository.save(new Orders(orderDate, arrivalDate));
+		Map<String, Object> variables = new HashMap<>();
+		variables.put("arrivalDate", arrivalDate);
+		runtimeService.startProcessInstanceById("placeOrder", variables);
 		addOrderItems(placedOrder, items);
 		return placedOrder;
 	}
@@ -57,7 +73,6 @@ public class OrderService {
 		for(PostOrderItem item : items) {
 			addOrderItem(order, item.getProductId(), item.getQuantity());
 		}
-		//Return accepted status
 	}
 	
 	public void cancelOrder(Long orderId) throws IllegalArgumentException{

@@ -1,0 +1,10 @@
+a.nav-link{
+	opacity: 1;
+	transition: 0.3s;
+}
+
+a.nav-link:hover {
+	background: #707070 !important;
+	transition: 0.3s;
+	opacity: 0.7;
+}

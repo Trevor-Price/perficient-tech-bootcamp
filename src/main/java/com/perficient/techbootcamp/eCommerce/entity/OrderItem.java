@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.orders;
+package com.perficient.techbootcamp.eCommerce.entity;
 
 import java.io.Serializable;
 
@@ -11,10 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import com.perficient.techbootcamp.eCommerce.product.Product;
-
 @Entity
-@Table(uniqueConstraints= {
+@Table(schema = "ecommerce", uniqueConstraints= {
 	@UniqueConstraint(columnNames = {"order_id", "product_id"})
 })
 public class OrderItem implements Serializable{

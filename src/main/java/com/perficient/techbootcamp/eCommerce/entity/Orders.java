@@ -1,4 +1,4 @@
-package com.perficient.techbootcamp.eCommerce.orders;
+package com.perficient.techbootcamp.eCommerce.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,8 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(schema = "ecommerce")
 public class Orders implements Serializable{
 	
 	private static final long serialVersionUID = 4789751747228323912L;

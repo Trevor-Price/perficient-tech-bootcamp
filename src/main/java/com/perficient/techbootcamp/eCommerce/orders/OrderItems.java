@@ -2,6 +2,8 @@ package com.perficient.techbootcamp.eCommerce.orders;
 
 import java.util.List;
 
+import com.perficient.techbootcamp.eCommerce.entity.Orders;
+
 public class OrderItems {
 	
 	private Orders order;
