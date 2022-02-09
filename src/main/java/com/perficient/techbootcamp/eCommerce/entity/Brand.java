@@ -20,6 +20,7 @@ public class Brand implements Serializable{
 	private long brandId;
 	
 	private String name;
+	private String logo;
 	
 	@OneToMany(mappedBy="brand")
 	private Set<Product> products;
@@ -47,6 +48,14 @@ public class Brand implements Serializable{
 
 	public void setBrandId(long brandId) {
 		this.brandId = brandId;
+	}
+	
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 	
 }

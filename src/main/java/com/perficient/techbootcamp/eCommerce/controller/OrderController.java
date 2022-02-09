@@ -1,9 +1,11 @@
 package com.perficient.techbootcamp.eCommerce.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,44 @@ public class OrderController {
 			ResponseEntity.noContent();
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to delete order. Order not found for id: %d.", orderId), e);
+		}
+		
+	}
+	
+	@GetMapping("/orderTasks")
+	public List<OrderTask> getOrderTasks(){
+		List<Task> tasks = service.getOrderTasks();
+		List<OrderTask> orderTasks = new ArrayList<OrderTask>();
+		for(Task task : tasks) {
+			orderTasks.add(new OrderTask(task.getId(), task.getName()));
+		}
+		return orderTasks;
+	}
+	
+	static class OrderTask {
+		
+		private String id;
+		private String name;
+		
+		public OrderTask(String id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 		
 	}

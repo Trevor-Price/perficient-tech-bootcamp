@@ -16,10 +16,13 @@ public class PopulateDatabase {
 	@SuppressWarnings("unused")
 	CommandLineRunner initDatabase(ProductRepository productRepo, BrandRepository brandRepo) {
 		return args -> {
+			
+			if(productRepo.count() > 1 || brandRepo.count() > 1) return;
+			
 			Brand tools = brandRepo.save(new Brand("Top Tools"));
 			Brand sports = brandRepo.save(new Brand("Sports and Stuff"));
 			Brand micro = brandRepo.save(new Brand("Microware Emporium"));
-			Brand more = brandRepo.save(new Brand("Bed Bath and More"));
+			Brand more = brandRepo.save(new Brand("The Home & More Store"));
 			Brand lucky = brandRepo.save(new Brand("Lucky LLC."));
 			Brand nano = brandRepo.save(new Brand("Nanoware Nexus"));
 			

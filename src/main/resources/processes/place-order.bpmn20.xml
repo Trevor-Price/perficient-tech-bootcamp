@@ -13,7 +13,7 @@
 	
 	<process id="placeOrder" name="Customer Order Purchase Process">
 		<startEvent id="orderSubmitted"/>
-		<sequenceFlow sourceRef="orderSubmitted" targetRef="orderArrivalTimer"/>
+		<sequenceFlow sourceRef="orderSubmitted" targetRef="cancelOrder"/>
 		
 		<!-- Wait for order cancellation or wait for arrival -->
 			<userTask id="cancelOrder" name="Cancel Order"/>
@@ -22,8 +22,10 @@
 					<timeDate>${arrivalDate}</timeDate>
 				</timerEventDefinition>
 			</boundaryEvent>
+			
 				
 		<!-- Order Arrived -->
+			<sequenceFlow sourceRef="orderArrivalTimer" targetRef="orderArrival"/>
 			<serviceTask id="orderArrival" name="Order Arrived"
 				flowable:class="com.perficient.techbootcamp.eCommerce.process.order.Arrival"/>
 			<sequenceFlow sourceRef="orderArrival" targetRef="orderArrived"/>
@@ -33,6 +35,7 @@
 			</endEvent>
 			
 		<!-- Order Canceled -->		
+			<sequenceFlow sourceRef="cancelOrder" targetRef="orderCancellation"/>
 			<serviceTask id="orderCancellation" name="Order Cancelled"
 				flowable:class="com.perficient.techbootcamp.eCommerce.process.order.Cancellation"/>
 			<sequenceFlow sourceRef="cancelOrder" targetRef="orderCancelled"/>

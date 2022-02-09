@@ -1,7 +1,7 @@
 package com.perficient.techbootcamp.eCommerce.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,8 +21,11 @@ public class Orders implements Serializable{
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long orderId;
 	
-	private LocalDate orderDate;
-	private LocalDate arrivalDate;
+	private LocalDateTime orderDate;
+	private LocalDateTime arrivalDate;
+	private LocalDateTime cancelDate;
+	private Boolean hasShipped;
+	private Boolean hasArrived;
 	
 	@OneToMany(
 		mappedBy = "order",
@@ -35,10 +38,12 @@ public class Orders implements Serializable{
 		super();
 	}
 	
-	public Orders(LocalDate orderDate, LocalDate arrivalDate) {
+	public Orders(LocalDateTime orderDate, LocalDateTime arrivalDate, Boolean hasShipped) {
 		super();
 		this.orderDate = orderDate;
 		this.arrivalDate = arrivalDate;
+		this.hasShipped = hasShipped;
+		this.hasArrived = false;
 	}
 
 	public Long getOrderId() {
@@ -48,21 +53,45 @@ public class Orders implements Serializable{
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
-
-	public LocalDate getOrderDate() {
+	
+	public LocalDateTime getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(LocalDate orderDate) {
+	public void setOrderDate(LocalDateTime orderDate) {
 		this.orderDate = orderDate;
 	}
 
-	public LocalDate getArrivalDate() {
+	public LocalDateTime getArrivalDate() {
 		return arrivalDate;
 	}
 
-	public void setArrivalDate(LocalDate arrivalDate) {
+	public void setArrivalDate(LocalDateTime arrivalDate) {
 		this.arrivalDate = arrivalDate;
+	}
+
+	public Boolean getHasShipped() {
+		return hasShipped;
+	}
+
+	public void setHasShipped(Boolean hasShipped) {
+		this.hasShipped = hasShipped;
+	}
+
+	public Boolean getHasArrived() {
+		return hasArrived;
+	}
+
+	public void setHasArrived(Boolean hasArrived) {
+		this.hasArrived = hasArrived;
+	}
+
+	public LocalDateTime getCancelDate() {
+		return cancelDate;
+	}
+
+	public void setCancelDate(LocalDateTime cancelDate) {
+		this.cancelDate = cancelDate;
 	}
 	
 }
