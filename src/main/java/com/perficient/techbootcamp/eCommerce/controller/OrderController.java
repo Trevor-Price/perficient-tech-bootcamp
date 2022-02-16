@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import com.perficient.techbootcamp.ecommerce.entity.Orders;
 import com.perficient.techbootcamp.ecommerce.request.OrderItemPostRequestBody;
+import com.perficient.techbootcamp.ecommerce.request.OrderStatusPutRequestBody;
 import com.perficient.techbootcamp.ecommerce.response.OrderItemsResponseBody;
 import com.perficient.techbootcamp.ecommerce.service.OrderServiceImp;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +50,16 @@ public class OrderController {
 			return new ResponseEntity<OrderItemsResponseBody>(orderItemsResponseBody, HttpStatus.OK);
 		} catch(NoSuchElementException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to get order items. Order not found for id: %d.", orderId));
+		}
+	}
+
+	@PutMapping("/{orderId}/status")
+	public void updateOrderStatus(@PathVariable Long orderId, @RequestBody OrderStatusPutRequestBody orderStatus){
+		try{
+			service.updateOrderStatus(orderId, orderStatus.getOrderStatus());
+			ResponseEntity.noContent();
+		} catch(EmptyResultDataAccessException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to update order status. Order not found for id: %d.", orderId), e);
 		}
 	}
 	

@@ -88,6 +88,16 @@ public class OrderServiceImp implements OrderService {
 		}
 	
 	/**
+	 * Update Order Status
+	 */
+	public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+		Orders updatedOrder = orderRepository.findById(orderId).orElseThrow();
+		updatedOrder.setOrderStatus(orderStatus);
+		orderRepository.save(updatedOrder);
+	}
+
+
+	/**
 	 * Cancel Order Logic
 	 */
 	public void cancelOrder(Long orderId) throws IllegalArgumentException{
