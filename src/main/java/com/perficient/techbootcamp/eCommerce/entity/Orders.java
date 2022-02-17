@@ -14,31 +14,25 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@RequiredArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 @Table(schema = "ecommerce")
 public class Orders implements Serializable{
 	
 	private static final long serialVersionUID = 4789751747228323912L;
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
-		private @Getter @Setter Long orderId;
+		private Long orderId;
 	
-	private @NonNull @Getter @Setter LocalDateTime orderDate;
-	private @NonNull @Getter @Setter LocalDateTime expectedArrivalDate;
-	private @Getter @Setter LocalDateTime cancelDate;
+	private @NonNull LocalDateTime orderDate;
+	private @NonNull LocalDateTime expectedArrivalDate;
+	private LocalDateTime cancelDate;
 
 	@Enumerated(EnumType.STRING)
-		private @NonNull @Getter @Setter OrderStatus orderStatus;
+		private @NonNull OrderStatus orderStatus;
 	
 	@OneToMany(
 		mappedBy = "order",

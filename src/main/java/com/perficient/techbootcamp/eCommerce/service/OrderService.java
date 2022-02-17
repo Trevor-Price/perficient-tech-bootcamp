@@ -2,20 +2,20 @@ package com.perficient.techbootcamp.ecommerce.service;
 
 import java.util.List;
 
-import com.perficient.techbootcamp.ecommerce.entity.OrderStatus;
-import com.perficient.techbootcamp.ecommerce.entity.Orders;
-import com.perficient.techbootcamp.ecommerce.request.OrderItemPostRequestBody;
-import com.perficient.techbootcamp.ecommerce.response.OrderItemsResponseBody;
+import com.perficient.techbootcamp.ecommerce.dto.request.PlaceNewOrderItemDto;
+import com.perficient.techbootcamp.ecommerce.dto.response.OrderDto;
+import com.perficient.techbootcamp.ecommerce.dto.response.OrderItemDto;
 
 public interface OrderService{
 
-    public List<Orders> getAllOrders();
+    public List<OrderDto> getAllOrders();
 	
-	public OrderItemsResponseBody getAllOrderItems(Long orderId);
+	public List<OrderItemDto> getAllOrderItems(Long orderId);
 	
-	public Orders placeOrder(List<OrderItemPostRequestBody> items);
+	public OrderDto placeOrder(List<PlaceNewOrderItemDto> orderItems);
 
-	public void updateOrderStatus(Long orderId, OrderStatus orderStatus);
+	public void updateOrderStatus(Long orderId, String orderStatus);
 		
-	public void cancelOrder(Long orderId) throws IllegalArgumentException;
+	public void cancelOrder(Long orderId);
+
 }

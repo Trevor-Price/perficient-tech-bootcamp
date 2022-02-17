@@ -3,8 +3,9 @@ package com.perficient.techbootcamp.ecommerce.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.perficient.techbootcamp.ecommerce.dto.response.ProductDto;
 import com.perficient.techbootcamp.ecommerce.entity.Product;
-import com.perficient.techbootcamp.ecommerce.service.ProductServiceImp;
+import com.perficient.techbootcamp.ecommerce.service.impl.ProductServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,15 +21,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProductController {
 	
 	@Autowired
-	private ProductServiceImp service;
+	private ProductServiceImpl service;
 	
 	@GetMapping
-	public List<Product> getAllProducts(){
+	public List<ProductDto> getAllProducts(){
 		return service.getAllProducts();
 	}
 	
 	@GetMapping("/{productId}")
-	public ResponseEntity<Product> getProduct(@PathVariable Long productId) {
+	public ResponseEntity<ProductDto> getProduct(@PathVariable Long productId) {
 		try{
 			return ResponseEntity.ok(service.getProductById(productId));
 		} catch (NoSuchElementException e) {

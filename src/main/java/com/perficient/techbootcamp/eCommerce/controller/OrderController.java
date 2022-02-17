@@ -4,11 +4,12 @@ import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.perficient.techbootcamp.ecommerce.dto.request.PlaceNewOrderItemDto;
+import com.perficient.techbootcamp.ecommerce.dto.request.ChangeOrderStatusDto;
+import com.perficient.techbootcamp.ecommerce.dto.response.OrderDto;
+import com.perficient.techbootcamp.ecommerce.dto.response.OrderItemDto;
 import com.perficient.techbootcamp.ecommerce.entity.Orders;
-import com.perficient.techbootcamp.ecommerce.request.OrderItemPostRequestBody;
-import com.perficient.techbootcamp.ecommerce.request.OrderStatusPutRequestBody;
-import com.perficient.techbootcamp.ecommerce.response.OrderItemsResponseBody;
-import com.perficient.techbootcamp.ecommerce.service.OrderServiceImp;
+import com.perficient.techbootcamp.ecommerce.service.impl.OrderServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -29,32 +30,32 @@ import org.springframework.web.server.ResponseStatusException;
 public class OrderController {
 	
 	@Autowired
-	private OrderServiceImp service;
+	private OrderServiceImpl service;
 	
 	@GetMapping
-	public ResponseEntity<List<Orders>> getAllOrders(){
+	public ResponseEntity<List<OrderDto>> getAllOrders(){
 		return ResponseEntity.ok(service.getAllOrders());
 	}
 	
 	@PostMapping
-	public ResponseEntity<Orders> postOrder(@RequestBody List<OrderItemPostRequestBody> orderItems) {
-		Orders order = service.placeOrder(orderItems);
+	public ResponseEntity<OrderDto> postOrder(@RequestBody List<PlaceNewOrderItemDto> orderItems) {
+		OrderDto order = service.placeOrder(orderItems);
 		URI uri = URI.create("/api/orders"+order.getOrderId());
 		return ResponseEntity.created(uri).body(order);
 	}
 	
 	@GetMapping("/{orderId}")
-	public ResponseEntity<OrderItemsResponseBody> getAllOrderItems(@PathVariable Long orderId){
+	public ResponseEntity<OrderItemDto> getAllOrderItems(@PathVariable Long orderId){
 		try {
-			OrderItemsResponseBody orderItemsResponseBody = service.getAllOrderItems(orderId);
-			return new ResponseEntity<OrderItemsResponseBody>(orderItemsResponseBody, HttpStatus.OK);
+			OrderItemDto orderItemsResponseBody = service.getAllOrderItems(orderId);
+			return new ResponseEntity<OrderItemDto>(orderItemsResponseBody, HttpStatus.OK);
 		} catch(NoSuchElementException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to get order items. Order not found for id: %d.", orderId));
 		}
 	}
 
 	@PutMapping("/{orderId}/status")
-	public void updateOrderStatus(@PathVariable Long orderId, @RequestBody OrderStatusPutRequestBody orderStatus){
+	public void updateOrderStatus(@PathVariable Long orderId, @RequestBody ChangeOrderStatusDto orderStatus){
 		try{
 			service.updateOrderStatus(orderId, orderStatus.getOrderStatus());
 			ResponseEntity.noContent();

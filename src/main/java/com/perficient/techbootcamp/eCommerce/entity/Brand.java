@@ -10,27 +10,21 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@RequiredArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 @Table(schema = "ecommerce")
 public class Brand implements Serializable{
 	
 	private static final long serialVersionUID = 5447891919722293324L;
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-		private @Getter @Setter Long brandId;
+		private Long brandId;
 	
-	private @NonNull @Getter @Setter String name;
-	private @Getter @Setter String logo;
+	private @NonNull String name;
+	private String logo;
 	
 	@OneToMany(mappedBy="brand")
 	private Set<Product> products;
