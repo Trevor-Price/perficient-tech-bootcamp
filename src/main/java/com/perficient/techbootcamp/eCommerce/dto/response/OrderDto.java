@@ -11,8 +11,9 @@ import lombok.experimental.Accessors;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDto {
-    private Long orderId;
+    private Long id;
     private String orderDate;
     private String orderStatus;
-    private Double expectedArrivalDate;
+    private String expectedArrivalDate;
+    private String CancelDate;
 }

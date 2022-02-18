@@ -11,6 +11,9 @@ import lombok.experimental.Accessors;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderItemDto {
-	private ProductDto product;
+	private Long productId;
+	private String description;
+	private String brand;
+	private Double price;
 	private Integer quantity;
 }

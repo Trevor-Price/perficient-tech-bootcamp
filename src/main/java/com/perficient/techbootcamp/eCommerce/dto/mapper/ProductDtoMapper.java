@@ -7,7 +7,7 @@ public class ProductDtoMapper {
     
     public static ProductDto toProductDto(Product product){
         return new ProductDto()
-            .setProductId(product.getProductId())
+            .setId(product.getProductId())
             .setDescription(product.getDescription())
             .setBrand(product.getBrand().getName())
             .setPrice(product.getPrice())

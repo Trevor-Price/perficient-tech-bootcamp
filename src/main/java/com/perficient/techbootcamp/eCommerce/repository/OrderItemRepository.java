@@ -11,9 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderItemRepository extends CrudRepository<OrderItem, Long>{
 
-	@Query(
-		"Select oi From OrderItem oi Where oi.orderId=?1"
-	)
-	public List<OrderItem> findAllItemsByOrderId(Long orderId);
+	@Query("Select oi From OrderItem oi Where oi.order.orderId=?1")
+		public List<OrderItem> findAllOrderItemsByOrderId(Long orderId);
 	
 }

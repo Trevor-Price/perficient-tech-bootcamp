@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
 public class ProductDto {
-    private Long productId;
+    private Long id;
     private String description;
     private String brand;
 	private Double price;

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.perficient.techbootcamp.ecommerce.dto.response.ProductDto;
-import com.perficient.techbootcamp.ecommerce.entity.Product;
 import com.perficient.techbootcamp.ecommerce.service.impl.ProductServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,20 @@ public class ProductController {
 	@Autowired
 	private ProductServiceImpl service;
 	
+	/**
+	 * Get all products
+	 * @return
+	 */
 	@GetMapping
 	public List<ProductDto> getAllProducts(){
 		return service.getAllProducts();
 	}
 	
+	/**
+	 * Get a product
+	 * @param productId
+	 * @return
+	 */
 	@GetMapping("/{productId}")
 	public ResponseEntity<ProductDto> getProduct(@PathVariable Long productId) {
 		try{

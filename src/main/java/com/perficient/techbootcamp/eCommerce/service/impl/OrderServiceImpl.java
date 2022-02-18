@@ -1,9 +1,10 @@
 package com.perficient.techbootcamp.ecommerce.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.perficient.techbootcamp.ecommerce.dto.mapper.OrderDtoMapper;
+import com.perficient.techbootcamp.ecommerce.dto.mapper.OrderItemDtoMapper;
 import com.perficient.techbootcamp.ecommerce.dto.request.PlaceNewOrderItemDto;
 import com.perficient.techbootcamp.ecommerce.dto.response.OrderDto;
 import com.perficient.techbootcamp.ecommerce.dto.response.OrderItemDto;
@@ -32,21 +33,32 @@ public class OrderServiceImpl implements OrderService {
 	private ProductRepository productRepository;
 	
 	/**
-	 *  Get Order Logic
+	 *  Get All Orders Logic
 	 */
 	public List<OrderDto> getAllOrders() {
 		List<Orders> orders = (List<Orders>) orderRepository.findAll();
-		//Map to dto
-		return orders;
+		return orders.stream()
+			.map(order -> OrderDtoMapper.toOrderDto(order))
+			.toList();
 	}
 	
+	/**
+	 * Get Order
+	 */
+	public OrderDto getOrder(Long orderId) {
+		return OrderDtoMapper.toOrderDto(
+			orderRepository.findById(orderId).orElseThrow()
+		);
+	}
+
 	/**
 	 * Get Order Items Logic
 	 */
 	public List<OrderItemDto> getAllOrderItems(Long orderId){
-		List<OrderItem> orderItems = orderItemRepository.findAllItemsByOrderId(orderId);
-		//Map to dto
-		return orderItems;
+		List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(orderId);
+		return orderItems.stream()
+			.map(orderItem -> OrderItemDtoMapper.toOrderItemDto(orderItem))
+			.toList();
 	}
 	
 	/**
@@ -54,13 +66,12 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	public OrderDto placeOrder(List<PlaceNewOrderItemDto> items) {
 		LocalDateTime orderDate = LocalDateTime.now();
-		LocalDateTime expectedArrivalDate = orderDate.plusDays(1);
+		LocalDateTime expectedArrivalDate = orderDate.plusDays(2);
 		Orders placedOrder = orderRepository.save(
 			new Orders(orderDate, expectedArrivalDate, OrderStatus.PLACED)
 		);
 		addOrderItems(placedOrder, items);
-		//Map to dto
-		return placedOrder;
+		return OrderDtoMapper.toOrderDto(placedOrder);
 	}
 
 		private void addOrderItems(Orders order, List<PlaceNewOrderItemDto> newOrderItems) {
@@ -94,19 +105,19 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	public void cancelOrder(Long orderId) throws IllegalArgumentException{
 		Orders cancelledOrder = orderRepository.findById(orderId).orElseThrow();
-		restockProducts(cancelledOrder);
+		restockProducts(cancelledOrder.getOrderId());
 		cancelledOrder.setCancelDate(LocalDateTime.now());
 		cancelledOrder.setOrderStatus(OrderStatus.CANCELLED);
 		orderRepository.save(cancelledOrder);
 	}
 
-		private void restockProducts(Orders order){
-			List<OrderItemDto> orderItems = orderItemRepository.findAllItemsByOrder(order);
+		private void restockProducts(Long orderId){
+			List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(orderId);
 			Product product;
 
 			int updatedAvailableQuantity;
 
-			for(OrderItemDto item : orderItems){
+			for(OrderItem item : orderItems){
 				product = productRepository.findById(item.getProduct().getProductId()).orElseThrow();
 				updatedAvailableQuantity = item.getQuantity() + product.getQuantityAvailable();
 				product.setQuantityAvailable(updatedAvailableQuantity);

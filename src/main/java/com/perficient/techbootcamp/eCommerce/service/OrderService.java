@@ -9,6 +9,8 @@ import com.perficient.techbootcamp.ecommerce.dto.response.OrderItemDto;
 public interface OrderService{
 
     public List<OrderDto> getAllOrders();
+
+	public OrderDto getOrder(Long orderId);
 	
 	public List<OrderItemDto> getAllOrderItems(Long orderId);
 	
