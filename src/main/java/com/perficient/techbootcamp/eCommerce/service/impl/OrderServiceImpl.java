@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 	private ProductRepository productRepository;
 	
 	/**
-	 *  Get All Orders Logic
+	 *  Get All Orders
 	 */
 	public List<OrderDto> getAllOrders() {
 		List<Orders> orders = (List<Orders>) orderRepository.findAll();
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * Get Order Items Logic
+	 * Get Order Items
 	 */
 	public List<OrderItemDto> getAllOrderItems(Long orderId){
 		List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(orderId);
@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	/**
-	 * Place Order Logic
+	 * Place Order
 	 */
 	public OrderDto placeOrder(List<PlaceNewOrderItemDto> items) {
 		LocalDateTime orderDate = LocalDateTime.now();
@@ -97,26 +97,27 @@ public class OrderServiceImpl implements OrderService {
 	public void updateOrderStatus(Long orderId, String orderStatus) {
 		Orders updatedOrder = orderRepository.findById(orderId).orElseThrow();
 		updatedOrder.setOrderStatus(OrderStatus.valueOf(orderStatus));
+		switch(OrderStatus.valueOf(orderStatus)){
+			case ARRIVED: 
+				updatedOrder.setActualArrivalDateTime(LocalDateTime.now());
+			break;
+			case CANCELLED: 
+				restockProducts(updatedOrder);
+				updatedOrder.setCancelDateTime(LocalDateTime.now());
+			break;
+			default: break;
+		}
 		orderRepository.save(updatedOrder);
 	}
 
-	/**
-	 * Cancel Order Logic
-	 */
-	public void cancelOrder(Long orderId) throws IllegalArgumentException{
-		Orders cancelledOrder = orderRepository.findById(orderId).orElseThrow();
-		restockProducts(cancelledOrder.getOrderId());
-		cancelledOrder.setCancelDate(LocalDateTime.now());
-		cancelledOrder.setOrderStatus(OrderStatus.CANCELLED);
-		orderRepository.save(cancelledOrder);
-	}
-
-		private void restockProducts(Long orderId){
-			List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(orderId);
+		/**
+		 * Restock Products for cancelled Order
+		 * @param order
+		 */
+		private void restockProducts(Orders order){
+			List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(order.getOrderId());
 			Product product;
-
 			int updatedAvailableQuantity;
-
 			for(OrderItem item : orderItems){
 				product = productRepository.findById(item.getProduct().getProductId()).orElseThrow();
 				updatedAvailableQuantity = item.getQuantity() + product.getQuantityAvailable();

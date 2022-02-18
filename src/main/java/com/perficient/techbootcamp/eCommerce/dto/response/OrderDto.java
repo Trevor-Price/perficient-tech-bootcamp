@@ -13,7 +13,12 @@ import lombok.experimental.Accessors;
 public class OrderDto {
     private Long id;
     private String orderDate;
-    private String orderStatus;
+    private String orderTime;
+    private String status;
     private String expectedArrivalDate;
-    private String CancelDate;
+    private String expectedArrivalTime;
+    private String cancelDate;
+    private String cancelTime;
+    private String actualArrivalDate;
+    private String actualArrivalTime;
 }

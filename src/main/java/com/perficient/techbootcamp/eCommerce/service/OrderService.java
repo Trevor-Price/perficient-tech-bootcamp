@@ -17,7 +17,5 @@ public interface OrderService{
 	public OrderDto placeOrder(List<PlaceNewOrderItemDto> orderItems);
 
 	public void updateOrderStatus(Long orderId, String orderStatus);
-		
-	public void cancelOrder(Long orderId);
 
 }

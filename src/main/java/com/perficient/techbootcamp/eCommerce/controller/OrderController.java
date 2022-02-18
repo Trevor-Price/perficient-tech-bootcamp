@@ -8,6 +8,7 @@ import com.perficient.techbootcamp.ecommerce.dto.request.PlaceNewOrderItemDto;
 import com.perficient.techbootcamp.ecommerce.dto.request.ChangeOrderStatusDto;
 import com.perficient.techbootcamp.ecommerce.dto.response.OrderDto;
 import com.perficient.techbootcamp.ecommerce.dto.response.OrderItemDto;
+import com.perficient.techbootcamp.ecommerce.entity.OrderStatus;
 import com.perficient.techbootcamp.ecommerce.service.impl.OrderServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class OrderController {
 	@DeleteMapping("/{orderId}")
 	public void deleteOrder(@PathVariable Long orderId){
 		try {
-			service.cancelOrder(orderId);
+			service.updateOrderStatus(orderId, OrderStatus.CANCELLED.name());
 			ResponseEntity.noContent();
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to delete order. Order not found for id: %d.", orderId), e);
@@ -105,7 +106,7 @@ public class OrderController {
 	@PutMapping("/status/{orderId}")
 	public void updateOrderStatus(@PathVariable Long orderId, @RequestBody ChangeOrderStatusDto orderStatus){
 		try{
-			service.updateOrderStatus(orderId, orderStatus.getOrderStatus());
+			service.updateOrderStatus(orderId, orderStatus.getStatus());
 			ResponseEntity.noContent();
 		} catch(EmptyResultDataAccessException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Failed to update order status. Order not found for id: %d.", orderId), e);

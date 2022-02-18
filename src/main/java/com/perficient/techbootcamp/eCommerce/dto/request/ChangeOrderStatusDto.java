@@ -9,5 +9,5 @@ import lombok.Data;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChangeOrderStatusDto {
-    private String orderStatus;
+    private String status;
 }
