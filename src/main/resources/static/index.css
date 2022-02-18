@@ -9,39 +9,15 @@ a.nav-link:hover {
 	opacity: 0.7;
 }
 
-#product-container {
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: flex-start;
-	gap: 20px;
-}
-
-.product {
+.content-container {
+	margin-top: 100px;
 	display: flex;
 	flex-flow: column nowrap;
-	justify-content: space-evenly;
-
-	overflow: hidden;
-	max-height: 300px;
-	max-width: 300px;
-	min-height: 300px;
-	min-width: 300px;
-	padding: 24px;
-	border-radius: 5px;
-	border: #2d3650 solid 2px;
-	color: #2d3650;
+	justify-content: center;
 }
 
-#productPrice {
+.content-item {
 	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
-	align-items: center;
-}
-
-#productImage {
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
-	align-items: flex-start;
+	flex-flow: row wrap;
+	gap: 40px;
 }

@@ -1,0 +1,28 @@
+#order-container {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	gap: 20px;
+}
+
+#order-banner {
+	justify-content: center;
+	gap: 20px;
+}
+
+
+.order {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-between;
+
+	overflow: hidden;
+	max-height: 250px;
+	max-width: 90%;
+	min-height: 250px;
+	min-width: 90%;
+	padding: 24px;
+	border-radius: 5px;
+	border: #2d3650 solid 2px;
+	color: #2d3650;
+}
