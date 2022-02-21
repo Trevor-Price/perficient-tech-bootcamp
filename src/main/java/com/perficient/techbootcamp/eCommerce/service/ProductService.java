@@ -2,12 +2,12 @@ package com.perficient.techbootcamp.ecommerce.service;
 
 import java.util.List;
 
-import com.perficient.techbootcamp.ecommerce.entity.Product;
+import com.perficient.techbootcamp.ecommerce.dto.response.ProductDto;
 
 public interface ProductService{
 
-    public List<Product> getAllProducts();
+    public List<ProductDto> getAllProducts();
 	
-	public Product getProductById(long id);
+	public ProductDto getProductById(long id);
 
 }
