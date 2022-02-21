@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.perficient.techbootcamp.ecommerce.dto.mapper.OrderDtoMapper;
 import com.perficient.techbootcamp.ecommerce.dto.mapper.OrderItemDtoMapper;
 import com.perficient.techbootcamp.ecommerce.dto.request.PlaceNewOrderItemDto;
@@ -19,6 +17,9 @@ import com.perficient.techbootcamp.ecommerce.repository.OrderItemRepository;
 import com.perficient.techbootcamp.ecommerce.repository.OrdersRepository;
 import com.perficient.techbootcamp.ecommerce.repository.ProductRepository;
 import com.perficient.techbootcamp.ecommerce.service.OrderService;
+import com.perficient.techbootcamp.ecommerce.service.exception.InvalidOrderStatusException;
+import com.perficient.techbootcamp.ecommerce.service.exception.OrderNotFoundException;
+import com.perficient.techbootcamp.ecommerce.service.exception.ProductNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
 		if(order.isPresent()){
 			return OrderDtoMapper.toOrderDto(order.get());
 		}
-		throw new EntityNotFoundException();
+		throw new OrderNotFoundException();
 	}
 
 	/**
@@ -101,11 +102,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * Update Order Status
 	 */
-	public OrderDto updateOrderStatus(Long orderId, String orderStatus) {
+	public OrderDto updateOrderStatus(Long orderId, String orderStatus){
 		Optional<Orders> order = orderRepository.findById(orderId);
 		if(order.isPresent()){
 			Orders updatedOrder = order.get();
-			updatedOrder.setOrderStatus(OrderStatus.valueOf(orderStatus));
+			try{
+				updatedOrder.setOrderStatus(OrderStatus.valueOf(orderStatus));
+			} catch(IllegalArgumentException | NullPointerException e){
+				throw new InvalidOrderStatusException();
+			}
 			switch(OrderStatus.valueOf(orderStatus)){
 				case ARRIVED: 
 					updatedOrder.setActualArrivalDateTime(LocalDateTime.now());
@@ -118,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 			return OrderDtoMapper.toOrderDto(orderRepository.save(updatedOrder));
 		}
-		throw new EntityNotFoundException();
+		throw new OrderNotFoundException();
 	}
 
 		/**
@@ -127,13 +132,17 @@ public class OrderServiceImpl implements OrderService {
 		 */
 		private void restockProducts(Orders order){
 			List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(order.getOrderId());
-			Product product;
 			int updatedAvailableQuantity;
 			for(OrderItem item : orderItems){
-				product = productRepository.findById(item.getProduct().getProductId()).orElseThrow();
-				updatedAvailableQuantity = item.getQuantity() + product.getQuantityAvailable();
-				product.setQuantityAvailable(updatedAvailableQuantity);
-				productRepository.save(product);
+				Optional<Product> product = productRepository.findById(item.getProduct().getProductId());
+				if(product.isPresent()){
+					Product restockedProduct = product.get();
+					updatedAvailableQuantity = item.getQuantity() + restockedProduct.getQuantityAvailable();
+					restockedProduct.setQuantityAvailable(updatedAvailableQuantity);
+					productRepository.save(restockedProduct);
+					return;
+				}
+				throw new ProductNotFoundException();
 			}
 		}
 

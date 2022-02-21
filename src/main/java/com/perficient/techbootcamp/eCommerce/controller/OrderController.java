@@ -44,7 +44,7 @@ public class OrderController {
 	public ResponseEntity<OrderDto> placeOrder(@RequestBody List<PlaceNewOrderItemDto> orderItems) {
 		OrderDto order = service.placeOrder(orderItems);
 		return ResponseEntity.created(
-			URI.create("/api/orders"+order.getId()))
+			URI.create("/api/orders/"+order.getId()))
 			.body(order);
 	}
 
