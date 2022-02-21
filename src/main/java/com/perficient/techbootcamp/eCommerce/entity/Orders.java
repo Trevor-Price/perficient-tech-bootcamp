@@ -40,11 +40,14 @@ public class Orders implements Serializable{
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
 		private Long orderId;
 	
-	private @NonNull LocalDateTime orderDate;
-	private @NonNull LocalDateTime expectedArrivalDate;
+	private @NonNull LocalDateTime orderDateTime;
+	private @NonNull LocalDateTime expectedArrivalDateTime;
 
 	@Column(nullable = true)
-		private LocalDateTime cancelDate;
+		private LocalDateTime cancelDateTime;
+
+	@Column(nullable = true)
+		private LocalDateTime actualArrivalDateTime;
 
 	@Enumerated(EnumType.STRING)
 		private @NonNull OrderStatus orderStatus;
@@ -57,11 +60,20 @@ public class Orders implements Serializable{
 	private List<OrderItem> orderItems;
 	
 	/**
-	 * Wraps the CancelDate field in an Optional object and returns it to the caller. 
-	 * It is wrapped in this object since an order might not be cancelled.
+	 * Wraps the CancelDateTime field in an Optional object and returns it to the caller. 
+	 * It is wrapped in this object since an order might not be cancelled and thus return null.
 	 * @return
 	 */
-	public Optional<LocalDateTime> getCancelDate(){
-		return Optional.ofNullable(cancelDate);
+	public Optional<LocalDateTime> getCancelDateTime(){
+		return Optional.ofNullable(cancelDateTime);
+	}
+
+	/**
+	 * Wraps the actualArrivalDateTime field in an Optional object and returns it to the caller. 
+	 * It is wrapped in this object since an order might not arrive and thus return null.
+	 * @return
+	 */
+	public Optional<LocalDateTime> getActualArrivalDateTime(){
+		return Optional.ofNullable(actualArrivalDateTime);
 	}
 }

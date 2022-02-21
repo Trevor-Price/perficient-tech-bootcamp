@@ -10,10 +10,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderDto {
+public class OrderDto{
     private Long id;
-    private String orderDate;
-    private String orderStatus;
-    private String expectedArrivalDate;
-    private String CancelDate;
+    private String orderDateTime;
+    private String status;
+    private String expectedArrivalDateTime;
+    private String cancelDateTime;
+    private String actualArrivalDateTime;
 }

@@ -7,11 +7,15 @@ public class OrderDtoMapper {
     public static OrderDto toOrderDto(Orders order){
         return new OrderDto()
             .setId(order.getOrderId())
-            .setOrderDate(order.getOrderDate().toString())
-            .setExpectedArrivalDate(order.getExpectedArrivalDate().toString())
-            .setOrderStatus(order.getOrderStatus().name())
-            .setCancelDate((order.getCancelDate().isPresent()) 
-                ? order.getCancelDate().get().toString() 
+            .setOrderDateTime(order.getOrderDateTime().toString())
+            .setExpectedArrivalDateTime(order.getExpectedArrivalDateTime().toString())
+            .setStatus(order.getOrderStatus().name())
+            .setCancelDateTime((order.getCancelDateTime().isPresent()) 
+                ? order.getCancelDateTime().get().toString()
+                : null
+            )
+            .setActualArrivalDateTime((order.getActualArrivalDateTime().isPresent()) 
+                ? order.getActualArrivalDateTime().get().toString()
                 : null
             );
     }

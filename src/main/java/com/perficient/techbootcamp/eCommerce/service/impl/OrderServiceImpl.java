@@ -2,6 +2,9 @@ package com.perficient.techbootcamp.ecommerce.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
 
 import com.perficient.techbootcamp.ecommerce.dto.mapper.OrderDtoMapper;
 import com.perficient.techbootcamp.ecommerce.dto.mapper.OrderItemDtoMapper;
@@ -33,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
 	private ProductRepository productRepository;
 	
 	/**
-	 *  Get All Orders Logic
+	 *  Get All Orders
 	 */
 	public List<OrderDto> getAllOrders() {
 		List<Orders> orders = (List<Orders>) orderRepository.findAll();
@@ -46,13 +49,15 @@ public class OrderServiceImpl implements OrderService {
 	 * Get Order
 	 */
 	public OrderDto getOrder(Long orderId) {
-		return OrderDtoMapper.toOrderDto(
-			orderRepository.findById(orderId).orElseThrow()
-		);
+		Optional<Orders> order = orderRepository.findById(orderId);
+		if(order.isPresent()){
+			return OrderDtoMapper.toOrderDto(order.get());
+		}
+		throw new EntityNotFoundException();
 	}
 
 	/**
-	 * Get Order Items Logic
+	 * Get Order Items
 	 */
 	public List<OrderItemDto> getAllOrderItems(Long orderId){
 		List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(orderId);
@@ -62,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	/**
-	 * Place Order Logic
+	 * Place Order
 	 */
 	public OrderDto placeOrder(List<PlaceNewOrderItemDto> items) {
 		LocalDateTime orderDate = LocalDateTime.now();
@@ -75,48 +80,55 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 		private void addOrderItems(Orders order, List<PlaceNewOrderItemDto> newOrderItems) {
-			for(PlaceNewOrderItemDto orderItem : newOrderItems) {
-				Product product = productRepository.findById(orderItem.getProductId()).orElseThrow();
-				int quantityAvailable = product.getQuantityAvailable().intValue();
-				int updatedAvailableQuantity = 0;
-				int quantityOrdered = orderItem.getQuantity();
-				if(quantityOrdered <= quantityAvailable){
-					updatedAvailableQuantity = quantityAvailable - quantityOrdered;
-				} else {
-					quantityOrdered = quantityAvailable;
+			newOrderItems.stream().forEach(
+				orderItem -> {
+					Product product = productRepository.findById(orderItem.getProductId()).orElseThrow();
+					int quantityAvailable = product.getQuantityAvailable().intValue();
+					int updatedAvailableQuantity = 0;
+					int quantityOrdered = orderItem.getQuantity();
+					if(quantityOrdered <= quantityAvailable){
+						updatedAvailableQuantity = quantityAvailable - quantityOrdered;
+					} else {
+						quantityOrdered = quantityAvailable;
+					}
+					product.setQuantityAvailable(updatedAvailableQuantity);
+					productRepository.save(product);
+					orderItemRepository.save(new OrderItem(order, product, quantityOrdered));
 				}
-				product.setQuantityAvailable(updatedAvailableQuantity);
-				productRepository.save(product);
-				orderItemRepository.save(new OrderItem(order, product, quantityOrdered));
-			}
+			);
 		}
 	
 	/**
 	 * Update Order Status
 	 */
-	public void updateOrderStatus(Long orderId, String orderStatus) {
-		Orders updatedOrder = orderRepository.findById(orderId).orElseThrow();
-		updatedOrder.setOrderStatus(OrderStatus.valueOf(orderStatus));
-		orderRepository.save(updatedOrder);
+	public OrderDto updateOrderStatus(Long orderId, String orderStatus) {
+		Optional<Orders> order = orderRepository.findById(orderId);
+		if(order.isPresent()){
+			Orders updatedOrder = order.get();
+			updatedOrder.setOrderStatus(OrderStatus.valueOf(orderStatus));
+			switch(OrderStatus.valueOf(orderStatus)){
+				case ARRIVED: 
+					updatedOrder.setActualArrivalDateTime(LocalDateTime.now());
+				break;
+				case CANCELLED: 
+					restockProducts(updatedOrder);
+					updatedOrder.setCancelDateTime(LocalDateTime.now());
+				break;
+				default: break;
+			}
+			return OrderDtoMapper.toOrderDto(orderRepository.save(updatedOrder));
+		}
+		throw new EntityNotFoundException();
 	}
 
-	/**
-	 * Cancel Order Logic
-	 */
-	public void cancelOrder(Long orderId) throws IllegalArgumentException{
-		Orders cancelledOrder = orderRepository.findById(orderId).orElseThrow();
-		restockProducts(cancelledOrder.getOrderId());
-		cancelledOrder.setCancelDate(LocalDateTime.now());
-		cancelledOrder.setOrderStatus(OrderStatus.CANCELLED);
-		orderRepository.save(cancelledOrder);
-	}
-
-		private void restockProducts(Long orderId){
-			List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(orderId);
+		/**
+		 * Restock Products for cancelled Order
+		 * @param order
+		 */
+		private void restockProducts(Orders order){
+			List<OrderItem> orderItems = orderItemRepository.findAllOrderItemsByOrderId(order.getOrderId());
 			Product product;
-
 			int updatedAvailableQuantity;
-
 			for(OrderItem item : orderItems){
 				product = productRepository.findById(item.getProduct().getProductId()).orElseThrow();
 				updatedAvailableQuantity = item.getQuantity() + product.getQuantityAvailable();
